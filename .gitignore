@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/mm_to_json/include/nanodbc
+/mm_to_json/include/nlohmann
+*.mdb
