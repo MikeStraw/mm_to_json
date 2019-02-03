@@ -147,14 +147,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="event.cpp" />
     <ClCompile Include="meet.cpp" />
     <ClCompile Include="mmToJsonConverter.cpp" />
     <ClCompile Include="mm_to_json.cpp" />
     <ClCompile Include="nanodbc.cpp" />
+    <ClCompile Include="session.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="event.h" />
+    <ClInclude Include="eventRound.h" />
     <ClInclude Include="meet.h" />
+    <ClInclude Include="meetType.h" />
     <ClInclude Include="mmToJsonConverter.h" />
+    <ClInclude Include="session.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

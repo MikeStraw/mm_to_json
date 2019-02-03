@@ -30,12 +30,33 @@
     <ClCompile Include="meet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mmToJsonConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="meet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="session.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eventRound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="meetType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
