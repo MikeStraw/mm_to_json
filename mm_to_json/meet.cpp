@@ -31,4 +31,3 @@ nlohmann::json Meet::toJson() const
 
 	return j;
 }
-

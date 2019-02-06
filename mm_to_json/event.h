@@ -1,7 +1,8 @@
 #pragma once
-//#include "entry.h"
+#include "entry.h"
 #include "meetType.h"
 #include <nlohmann/json.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,9 @@ public:
 	{
 	}
 
-//	void addEntries(std::vector<Entry *> &entries) { entries_ = entries; }
+	// add an entry to the proper entry vector
+	void addEntry(const IndEntry &entry)    { individualEntries_.push_back(entry); }
+	void addEntry(const RelayEntry &entry)  { relayEntries_.push_back(entry); }
 
 	// create the event description appropriate for the given meet type
 	void createDescription(MeetType meetType);
@@ -54,8 +57,6 @@ private:
 	std::string round_;       // 'P' == prelim, 'F' == final
 	std::string stroke_;
 
-	// TODO:  use unique_ptr<Entry>.
-	//        not a big deal since destruction won't happen till end of program anyway.
-	//        don't delete in dtor() as the pointers are copied from one Event to another
-//	std::vector<Entry *> entries_;  // Need pointer so that polymorphism works
+	std::vector<IndEntry>   individualEntries_; 
+	std::vector<RelayEntry> relayEntries_;
 };

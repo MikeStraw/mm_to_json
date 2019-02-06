@@ -36,6 +36,9 @@
     <ClCompile Include="event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="entry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mmToJsonConverter.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="meetType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="athlete.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

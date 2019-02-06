@@ -147,6 +147,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="entry.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="meet.cpp" />
     <ClCompile Include="mmToJsonConverter.cpp" />
@@ -155,6 +156,8 @@
     <ClCompile Include="session.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="athlete.h" />
+    <ClInclude Include="entry.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="eventRound.h" />
     <ClInclude Include="meet.h" />

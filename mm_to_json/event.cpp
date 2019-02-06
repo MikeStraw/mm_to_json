@@ -11,9 +11,16 @@ nlohmann::json Event::toJson() const
 	j["desc"] = description_;
 
 	nlohmann::json jEntries = nlohmann::json::array();
-//	for (auto entry : entries_) {
-//		jEntries.push_back(entry->toJson());
-//	}
+	if (isRelay()) {
+		for (auto &entry : relayEntries_) {
+			jEntries.push_back(entry.toJson());
+		}
+	}
+	else {
+		for (auto &entry : individualEntries_) {
+			jEntries.push_back(entry.toJson());
+		}
+	}
 	j["entries"] = jEntries;
 
 	return j;
