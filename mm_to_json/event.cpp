@@ -7,8 +7,10 @@ using namespace std;
 nlohmann::json Event::toJson() const
 {
 	nlohmann::json j;
-	j["number"] = number_;
-	j["desc"] = description_;
+	j["number"]  = number_;
+	j["numLanes"] = numLanes_;
+	j["desc"]    = description_;
+	j["isRelay"] = isRelay();
 
 	nlohmann::json jEntries = nlohmann::json::array();
 	if (isRelay()) {

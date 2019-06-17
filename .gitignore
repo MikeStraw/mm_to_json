@@ -247,3 +247,4 @@ ModelManifest.xml
 /mm_to_json/include/nlohmann
 *.mdb
 *.ldb
+/*.json

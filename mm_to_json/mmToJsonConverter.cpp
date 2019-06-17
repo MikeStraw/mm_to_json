@@ -269,7 +269,8 @@ map<int, string> mmToJsonConverter::createTeamNameMap()
 vector<Event> mmToJsonConverter::getAllEvents()
 {
 	vector<Event> events;
-	string sql = "Select Event_no, Ind_rel, Event_gender, Event_sex, Low_age, High_age, Event_dist, Event_stroke, Div_no "
+	string sql = "Select Event_no, Ind_rel, Event_gender, Event_sex, Low_age, High_age, Event_dist, "
+		         "Event_stroke, Div_no, Num_prelanes, Num_finlanes, Event_rounds "
 	             "From Event Order by Event_no";
 	nanodbc::result result = nanodbc::execute(dbConn_, sql);
 
@@ -283,10 +284,15 @@ vector<Event> mmToJsonConverter::getAllEvents()
 		int distance = result.get<int>(6);
 		string stroke = getStroke(result.get<string>(7), relay);
 		string division = getDivision(result.get<int>(8));
+		int preLanes = result.get<int>(9, 0);
+		int finLanes = result.get<int>(10, 0);
+		int evtRound = result.get<int>(11, 1);
+
+		int numLanes = evtRound == 1 ? preLanes : finLanes;
 
 		// Events from a "meet" rather than a session are always Final and the event pointer
-		// is the same as the event number
-		Event event(number, relay, gender, genderDesc, minAge, maxAge, distance, stroke, division, "F", number);
+		// is the same as the event number.  
+		Event event(number, relay, gender, genderDesc, minAge, maxAge, distance, stroke, division, "F", number, numLanes);
 		events.push_back(event);
 	}
 
@@ -342,7 +348,8 @@ vector<EventRound> mmToJsonConverter::getEventRounds(int sessionPtr)
 Event mmToJsonConverter::getEventById(EventRound eventRound)
 {
 	string eventIdStr = numToString(eventRound.eventPtr_);
-	string sql = "Select Event_no, Ind_rel, Event_gender, Event_sex, Low_age, High_age, Event_dist, Event_stroke, Div_no "
+	string sql = "Select Event_no, Ind_rel, Event_gender, Event_sex, Low_age, High_age, Event_dist, "
+		         "Event_stroke, Div_no, Num_prelanes, Num_finlanes, Event_rounds "
 		         "From Event where Event_Ptr = " + eventIdStr;
 	nanodbc::result result = nanodbc::execute(dbConn_, sql);
 
@@ -360,9 +367,15 @@ Event mmToJsonConverter::getEventById(EventRound eventRound)
 		int distance = result.get<int>(6);
 		string stroke = getStroke(result.get<string>(7), relay);
 		string division = getDivision(result.get<int>(8));
+		int preLanes = result.get<int>(9, 0);
+		int finLanes = result.get<int>(10, 0);
+		int evtRounds = result.get<int>(11, 1);
+
+		int numLanes = evtRounds == 1 ? preLanes : finLanes;
+		cout << "getEventById: pre=" << preLanes << ", fin=" << finLanes << ", evtRounds=" << evtRounds << endl;
 
 		Event event(number, relay, gender, genderDesc, minAge, maxAge, distance, 
-			        stroke, division, eventRound.round_, eventRound.eventPtr_);
+			        stroke, division, eventRound.round_, eventRound.eventPtr_, numLanes);
 		
 		return event;
 	}

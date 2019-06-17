@@ -27,13 +27,13 @@ nlohmann::json IndEntry::toJson() const
 nlohmann::json RelayEntry::toJson() const
 {
 	nlohmann::json j = Entry::toJson();
-	j["name"] = name_;
+	j["relay"]["name"] = name_;
 
-	nlohmann::json jRelay = nlohmann::json::array();
+	nlohmann::json jRelayAthletes = nlohmann::json::array();
 	for (auto &athlete : athletes_) {
-		jRelay.push_back(athlete.toJson());
+		jRelayAthletes.push_back(athlete.toJson());
 	}
-	j["relay"] = jRelay;
+	j["relay"]["athletes"] = jRelayAthletes;
 
 	return j;
 }

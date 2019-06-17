@@ -12,9 +12,9 @@ class Event
 public:
 	Event(int number, bool relay, std::string gender, std::string genderDescription, 
 		  int minAge, int maxAge, int distance, const std::string &stroke, 
-		  const std::string &division, const std::string &round, int eventPtr)
+		  const std::string &division, const std::string &round, int eventPtr, int numLanes)
 		:ageMax_(maxAge), ageMin_(minAge), distance_(distance), division_(division), 
-		 gender_(gender), genderDesc_(genderDescription), number_(number), 
+		 gender_(gender), genderDesc_(genderDescription), number_(number), numLanes_(numLanes),
 		 relay_(relay), stroke_(stroke), round_(round), eventPtr_(eventPtr)
 	{
 	}
@@ -34,6 +34,7 @@ public:
 	int   getEventPtr() const { return eventPtr_; }
 	const std::string getGender() const { return gender_; }
 	int   getNumber() const { return number_; }
+	int   getNumberOfLanes() const { return numLanes_; }
 	const std::string getRound() const { return round_; }
 	const std::string getStroke() const { return stroke_; }
 	bool  isRelay() const { return relay_; }
@@ -53,6 +54,7 @@ private:
 	std::string gender_;      // Gender of participants 'M', 'F', 'C'
 	std::string genderDesc_;  // Description of gender 'B'oys, 'G'irls, 'M'en, 'W'omen, 'X'(mixed)
 	int         number_;
+	int         numLanes_;
 	bool        relay_;       // true == relay
 	std::string round_;       // 'P' == prelim, 'F' == final
 	std::string stroke_;
