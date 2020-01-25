@@ -20,8 +20,8 @@ typedef struct {
 // ****************************************************************************
 
 EntryHeatLaneTime getHeatLaneTime(const string &eventRound, const string &stroke, float seedTime,
-	                              int preHeat, int preLane, float preTime,
-	                              int finHeat, int finLane, float finTime)
+	                              int preHeat, int preLane, float preTime, string preTimeStatus,
+	                              int finHeat, int finLane, float finTime, string finTimeStatus)
 {
 	EntryHeatLaneTime entryInfo;
 
@@ -30,12 +30,12 @@ EntryHeatLaneTime getHeatLaneTime(const string &eventRound, const string &stroke
 	if (eventRound == "P") {
 		entryInfo.heat = preHeat;
 		entryInfo.lane = preLane;
-		entryInfo.time = (preTime > 0.0 ? numToString(preTime) : "");
+		entryInfo.time = timeToString(preTime, preTimeStatus);
 	}
 	else {
 		entryInfo.heat = finHeat;
 		entryInfo.lane = finLane;
-		entryInfo.time = (finTime > 0.0 ? numToString(finTime) : "");
+		entryInfo.time = timeToString(finTime, finTimeStatus);
 	}
 
 	// For swimming events, the times are seconds.tt.  Convert these to mm:ss.tt
@@ -118,8 +118,9 @@ void mmToJsonConverter::convert()
 void mmToJsonConverter::addRelayEntries(Event &event)
 {
 	string eventIdStr = numToString(event.getEventPtr());
-	string sql = "Select Team_no, Team_ltr, Relay_no, Pre_heat, Pre_lane, Fin_heat, Fin_lane, "
-		         "ConvSeed_time, Pre_Time, Fin_Time "
+	string sql = "Select Team_no, Team_ltr, Relay_no, ConvSeed_time, "
+		         "Pre_heat, Pre_lane, Pre_Time, Pre_Stat, "
+		         "Fin_heat, Fin_lane, Fin_Time, Fin_Stat "
 		         "From Relay where Event_Ptr = " + eventIdStr;
 
 	nanodbc::result result = nanodbc::execute(dbConn_, sql);
@@ -127,16 +128,19 @@ void mmToJsonConverter::addRelayEntries(Event &event)
 		int teamNo      = result.get<int>(0);
 		string relayLtr = result.get<string>(1, "A");
 		int relayNo     = result.get<int>(2);
-		int preHeat     = result.get<int>(3, 0);
-		int preLane     = result.get<int>(4, 0);
-		int finHeat     = result.get<int>(5, 0);
-		int finLane     = result.get<int>(6, 0);
-		float seedTime  = result.get<float>(7, 0.0);
-		float preTime   = result.get<float>(8, 0.0);
-		float finTime   = result.get<float>(9, 0.0);
-
+		float seedTime  = result.get<float>(3, 0.0);
+		int preHeat     = result.get<int>(4, 0);
+		int preLane     = result.get<int>(5, 0);
+		float preTime   = result.get<float>(6, 0.0);
+		string preStat  = result.get<string>(7, "");
+		int finHeat     = result.get<int>(8, 0);
+		int finLane     = result.get<int>(9, 0);
+		float finTime   = result.get<float>(10, 0.0);
+		string finStat  = result.get<string>(11, "");
+		
+		
 		EntryHeatLaneTime entryInfo = getHeatLaneTime(event.getRound(), event.getStroke(), seedTime,
-			                                          preHeat, preLane, preTime, finHeat, finLane, finTime);
+			                                          preHeat, preLane, preTime, preStat, finHeat, finLane, finTime, finStat);
 
 		if (entryInfo.heat != 0 && entryInfo.lane != 0) {
 			string teamName = getTeamNameByNumber(teamNo);
@@ -152,22 +156,27 @@ void mmToJsonConverter::addRelayEntries(Event &event)
 void mmToJsonConverter::addIndividualEntries(Event &event)
 {
 	string eventIdStr = numToString(event.getEventPtr());
-	string sql = "Select Ath_no, Pre_heat, Pre_lane, Fin_heat, Fin_lane, ConvSeed_time, Pre_Time, Fin_Time "
+	string sql = "Select Ath_no, ConvSeed_time, "
+		         "Pre_heat, Pre_lane, Pre_Time, Pre_Stat, "
+		         "Fin_heat, Fin_lane, Fin_Time, Fin_Stat "
 		         "From Entry where Event_Ptr = " + eventIdStr;
 
 	nanodbc::result result = nanodbc::execute(dbConn_, sql);
 	while (result.next()) {
 		int athleteNo  = result.get<int>(0);
-		int preHeat    = result.get<int>(1, 0);
-		int preLane    = result.get<int>(2, 0);
-		int finHeat    = result.get<int>(3, 0);
-		int finLane    = result.get<int>(4, 0);
-		float seedTime = result.get<float>(5, 0.0);
-		float preTime  = result.get<float>(6, 0.0);
-		float finTime  = result.get<float>(7, 0.0);
+		float seedTime = result.get<float>(1, 0.0);
+		int preHeat    = result.get<int>(2, 0);
+		int preLane    = result.get<int>(3, 0);
+		float preTime  = result.get<float>(4, 0.0);
+		string preStat = result.get<string>(5, "");
+		int finHeat    = result.get<int>(6, 0);
+		int finLane    = result.get<int>(7, 0);
+		float finTime  = result.get<float>(8, 0.0);
+		string finStat = result.get<string>(9, "");
 
 		EntryHeatLaneTime entryInfo = getHeatLaneTime(event.getRound(), event.getStroke(), seedTime,
-			                                          preHeat, preLane, preTime, finHeat, finLane, finTime);
+			                                          preHeat, preLane, preTime, preStat, 
+			                                          finHeat, finLane, finTime, finStat);
 
 		// If there data for this entry, add it to the event
 		if (entryInfo.heat != 0 && entryInfo.lane != 0) {
@@ -372,7 +381,7 @@ Event mmToJsonConverter::getEventById(EventRound eventRound)
 		int evtRounds = result.get<int>(11, 1);
 
 		int numLanes = evtRounds == 1 ? preLanes : finLanes;
-		cout << "getEventById: pre=" << preLanes << ", fin=" << finLanes << ", evtRounds=" << evtRounds << endl;
+		//cout << "getEventById: pre=" << preLanes << ", fin=" << finLanes << ", evtRounds=" << evtRounds << endl;
 
 		Event event(number, relay, gender, genderDesc, minAge, maxAge, distance, 
 			        stroke, division, eventRound.round_, eventRound.eventPtr_, numLanes);

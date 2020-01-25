@@ -24,7 +24,8 @@ inline std::string timeToMinSec(const std::string &inTimeStr)
 {
 	std::string outStr;
 
-	if (inTimeStr.empty() || inTimeStr == "0.0" || inTimeStr == "NT") {
+	if (inTimeStr.empty() || inTimeStr == "0.0" 
+	|| inTimeStr == "NT"  ||  inTimeStr == "DQ"  ||  inTimeStr == "SCR") {
 		return inTimeStr;
 	}
 	// check for format of ss.tt
@@ -49,6 +50,21 @@ inline std::string timeToMinSec(const std::string &inTimeStr)
 	}
 
 	return outStr;
+}
+
+inline std::string timeToString(float inTime, std::string timeStatus)
+{
+	std::string outTime = (inTime > 0.0 ? numToString(inTime) : "");
+
+	// check for DQ or scratch
+	if (timeStatus == "Q") {
+		outTime = "DQ";
+	}
+	else if (timeStatus == "R") {
+		outTime = "SCR";
+	}
+	
+	return outTime;
 }
 
 
