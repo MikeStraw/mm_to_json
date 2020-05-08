@@ -6,8 +6,8 @@ using namespace std;
 
 // Data struct holding some Entry info
 typedef struct {
-	int heat;
-	int lane;
+	int heat = 0;
+	int lane = 0;
 	std::string seed;
 	std::string time;
 } EntryHeatLaneTime;
@@ -85,7 +85,7 @@ mmToJsonConverter::mmToJsonConverter(const string &mbFileSpec)
 }
 
 
-void mmToJsonConverter::convert()
+nlohmann::json mmToJsonConverter::convert()
 {
 	unique_ptr<Meet> meet     = getMeetInfo();
 	vector<Session>  sessions = getSessionInfo();
@@ -106,7 +106,7 @@ void mmToJsonConverter::convert()
 		meet->addSession(session);
 	}
 
-	meetJson_ = meet->toJson();
+	return meet->toJson();
 }
 
 

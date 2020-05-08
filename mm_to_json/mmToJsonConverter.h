@@ -16,11 +16,12 @@ public:
 	mmToJsonConverter(const std::string &mbFileSpec);
 
 	// convert - Convert the meet information into a JSON representation.
+	//           Returns the JSON object.
 	//           Throws an xxx exception if the conversion fails.
-	void convert();
+	nlohmann::json convert();
 
 	// toJsonStr - return the converted meet information as a JSON string
-	std::string toJsonStr() const { return meetJson_.dump(4);  }
+	static inline std::string toJsonStr(const nlohmann::json &json)  { return json.dump(4);  }
 
 private:
 	// add entries to the event
@@ -84,6 +85,6 @@ private:
 	std::map<int, Athlete>     athleteMap_;   // cache of athlete IDs to Athlete objects
 	nanodbc::connection        dbConn_;       // ODBC connection to the MDB file
 	std::map<int, std::string> divisionMap_;  // cache of division IDs to division name
-	nlohmann::json             meetJson_;     // The meet as a JSON object
+//	nlohmann::json             meetJson_;     // The meet as a JSON object
 	std::map<int, std::string> teamNameMap_;  // cache of team IDs to team names
 };
